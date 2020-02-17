@@ -1,3 +1,5 @@
+# Name: Kennedy Anukam
+# Purpose: Get channel info from Youtube Channel URL
 from tkinter import *
 import urllib.request
 import json
