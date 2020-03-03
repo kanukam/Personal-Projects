@@ -4,7 +4,7 @@ from tkinter import *
 import urllib.request
 import json
 
-key = "AIzaSyCTDbH8xo45eIncPJIKyN5V-_klCMJ2rHI"
+key = ""
 
 
 def channel_data():
