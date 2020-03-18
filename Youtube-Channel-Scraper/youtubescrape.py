@@ -1,10 +1,8 @@
-# Name: Kennedy Anukam
-# Purpose: Display Youtube Channel information with tkinter GUI
 from tkinter import *
-import urllib.request
-import json
+import requests
 
-key = ""
+google_key = ""
+URL = "https://www.googleapis.com/youtube/v3/channels?part=statistics"
 
 
 def channel_data():
@@ -13,16 +11,23 @@ def channel_data():
     # Last element will be channel ID
     y_id = name.split('/')[-1]
     # Name of Youtube Channel from user, key from Google api
-    data = urllib.request.urlopen(
-        "https://www.googleapis.com/youtube/v3/channels?part=statistics&id=" + y_id + "&key=" + key).read()
-    # Need JSON data
-    sub = json.loads(data)['items'][0]["statistics"]["subscriberCount"]
-    total_view = json.loads(data)['items'][0]["statistics"]["viewCount"]
-    total_videos = json.loads(data)['items'][0]["statistics"]["videoCount"]
-    # Setting tkinter labels to values
-    l2.config(text=sub)
-    l4.config(text=total_view)
-    l6.config(text=total_videos)
+    PARAMS = {"key": google_key, "id": y_id}
+    data = requests.get(url=URL, params=PARAMS)
+    try:
+        data = data.json()
+        # Acquire values from dictionary
+        sub = data['items'][0]["statistics"]["subscriberCount"]
+        total_view = data['items'][0]["statistics"]["viewCount"]
+        total_videos = data['items'][0]["statistics"]["videoCount"]
+        # Setting tkinter labels to values
+        l2.config(text=sub)
+        l4.config(text=total_view)
+        l6.config(text=total_videos)
+    except IndexError:
+        # If the request encountered an error
+        l2.config(text="Error")
+        l4.config(text="Error")
+        l6.config(text="Error")
 
 
 # Create a tkinter window display interface
@@ -32,7 +37,7 @@ root.title("Youtube Scraper")
 root.geometry("500x200")
 # User can enter into text box the channel URL
 e1 = Entry(root, textvariable=StringVar())
-# Setting size of text box
+# Setting placement of text box
 e1.grid(row=1, column=2)
 # Creating a button which uses the channel_data function to get the URL, uses text boxes entry
 b1 = Button(root, text="Enter Channel URL", command=channel_data)
